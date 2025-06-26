@@ -63,7 +63,7 @@ st.markdown("""
     }
 
     .welcome-box {
-        padding: 3rem;
+        padding: 5rem;
         max-width: 500px;
         margin-left: 40px;
         margin-top: 100px;
