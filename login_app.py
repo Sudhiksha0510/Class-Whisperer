@@ -78,7 +78,7 @@ with col1:
 
     # ✅ Avatar only, centered above login box
     st.markdown(
-        '<img class="avatar" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="User Icon">',
+        '<img class="avatar" src="https://cdn-icons-png.flaticon.com/512/10542/10542844.png" alt="User Icon">',
         unsafe_allow_html=True
     )
 
