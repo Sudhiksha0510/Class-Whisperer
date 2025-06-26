@@ -66,6 +66,7 @@ st.markdown("""
         padding: 3rem;
         max-width: 500px;
         margin-left: 40px;
+        margin-top: 100px;
     }
     </style>
 """, unsafe_allow_html=True)
