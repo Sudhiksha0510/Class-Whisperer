@@ -1,9 +1,20 @@
 import streamlit as st
+from PIL import Image
+import base64
+from io import BytesIO
 
-# Page configuration
-st.set_page_config(page_title="Class Whisperer", layout="wide")
+# Convert image to base64
+def image_to_base64(img):
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return base64.b64encode(buffer.getvalue()).decode()
 
-# Pure text-style sidebar menu CSS
+# Load your uploaded image
+logo_img = Image.open("class_emoji.webp")
+logo_base64 = image_to_base64(logo_img)
+
+# Page config
+# CSS for clean, borderless, flat sidebar nav
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
@@ -19,14 +30,13 @@ st.markdown("""
         padding: 1rem;
     }
 
-    /* Remove button look */
     button[kind="secondary"] {
         all: unset;
         display: block;
         width: 100%;
         text-align: left;
         padding: 0.6rem 1rem;
-        margin-bottom: 0.1rem;
+        margin-bottom: 0.4rem;
         border-radius: 6px;
         font-size: 1rem;
         color: white;
@@ -44,7 +54,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Pages
+# Page map
 pages = {
     "Home": "🏠 Home",
     "Attendance": "📅 Attendance",
@@ -56,35 +66,42 @@ pages = {
     "Assistant Bot": "🤖 Assistant Bot"
 }
 
-# Session state for current page
+# Track selected page
 if "current_page" not in st.session_state:
     st.session_state.current_page = "Home"
 
-# Sidebar with clean menu
+# Sidebar with image logo and nav items
 with st.sidebar:
+    # Navigation items only (no title/logo)
     for key, label in pages.items():
-        is_active = st.session_state.current_page == key
-        btn = st.button(label, key=key)
-        if btn:
+        if st.button(label, key=key):
             st.session_state.current_page = key
-        # Use JS to add active style
-        if is_active:
+
+        if st.session_state.current_page == key:
             st.markdown(f"""
                 <script>
-                var btns = parent.document.querySelectorAll('button[kind="secondary"]');
-                btns.forEach(b => {{
-                    if (b.innerText === "{label}") {{
-                        b.classList.add("active");
-                    }}
-                }});
+                    var btns = parent.document.querySelectorAll('button[kind="secondary"]');
+                    btns.forEach(b => {{
+                        if (b.innerText === "{label}") {{
+                            b.classList.add("active");
+                        }}
+                    }});
                 </script>
             """, unsafe_allow_html=True)
 
-# Page content functions
+
+# Page display functions
 def show_home():
-    st.title("CLASS WHISPERER👻")
-    st.markdown("## 👋 Home")
+    st.markdown(f"""
+        <div style='display: flex; align-items: center; gap: 1rem;'>
+            <img src='data:image/png;base64,{logo_base64}' width='40' style='border-radius: 6px;'/>
+            <h1 style='margin: 0;'>CLASS WHISPERER</h1>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("### 👋 Home")
     st.write("Welcome to the dashboard.")
+
 
 def show_attendance():
     st.markdown("## 📅 Attendance")
@@ -114,7 +131,7 @@ def show_bot():
     st.markdown("## 🤖 Assistant Bot")
     st.write("Interact with your assistant bot.")
 
-# Show selected page
+# Page render map
 page_functions = {
     "Home": show_home,
     "Attendance": show_attendance,
@@ -126,4 +143,5 @@ page_functions = {
     "Assistant Bot": show_bot
 }
 
+# Render selected page
 page_functions[st.session_state.current_page]()
