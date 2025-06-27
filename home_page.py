@@ -1,9 +1,9 @@
 import streamlit as st
 
-# Set page configuration
+# Page configuration
 st.set_page_config(page_title="Class Whisperer", layout="wide")
 
-# Custom CSS to style the sidebar buttons
+# Pure text-style sidebar menu CSS
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
@@ -14,76 +14,116 @@ st.markdown("""
         color: white;
     }
 
-    .sidebar .css-1d391kg {
+    section[data-testid="stSidebar"] {
         background-color: #1e1e2f;
         padding: 1rem;
     }
 
-    .menu-button {
+    /* Remove button look */
+    button[kind="secondary"] {
+        all: unset;
+        display: block;
         width: 100%;
         text-align: left;
-        margin: 0.3rem 0;
-        background-color: #2a2a40;
-        color: white;
-        border: none;
-        border-radius: 6px;
         padding: 0.6rem 1rem;
-        font-weight: 500;
-        transition: 0.3s;
+        margin-bottom: 0.1rem;
+        border-radius: 6px;
+        font-size: 1rem;
+        color: white;
         cursor: pointer;
+        transition: 0.3s;
     }
 
-    .menu-button:hover {
+    button[kind="secondary"]:hover {
         background-color: #3a3aff;
     }
 
-    .active-button {
-        background-color: #3a3aff;
+    .active {
+        background-color: #3a3aff !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Session state to track current page
+# Pages
+pages = {
+    "Home": "🏠 Home",
+    "Attendance": "📅 Attendance",
+    "Alerts": "🚨 Alerts",
+    "Class Notes": "📓 Class Notes",
+    "Progress": "📈 Progress",
+    "Teachers Feedback": "📝 Teachers Feedback",
+    "Ask Doubts": "❓ Ask Doubts",
+    "Assistant Bot": "🤖 Assistant Bot"
+}
+
+# Session state for current page
 if "current_page" not in st.session_state:
     st.session_state.current_page = "Home"
 
-# Sidebar with individual buttons
+# Sidebar with clean menu
 with st.sidebar:
-    st.markdown("## 📚 Class Whisperer")
-    
-    if st.button("🏠 Home", key="home"):
-        st.session_state.current_page = "Home"
-    if st.button("📅 Attendance", key="attendance"):
-        st.session_state.current_page = "Attendance"
-    if st.button("🚨 Alerts", key="alerts"):
-        st.session_state.current_page = "Alerts"
-    if st.button("📓 Class Notes", key="notes"):
-        st.session_state.current_page = "Class Notes"
-    if st.button("📈 Progress", key="progress"):
-        st.session_state.current_page = "Progress"
-    if st.button("📝 Teachers Feedback", key="feedback"):
-        st.session_state.current_page = "Teachers Feedback"
-    if st.button("❓ Ask Doubts", key="doubts"):
-        st.session_state.current_page = "Ask Doubts"
-    if st.button("🤖 Assistant Bot", key="bot"):
-        st.session_state.current_page = "Assistant Bot"
+    for key, label in pages.items():
+        is_active = st.session_state.current_page == key
+        btn = st.button(label, key=key)
+        if btn:
+            st.session_state.current_page = key
+        # Use JS to add active style
+        if is_active:
+            st.markdown(f"""
+                <script>
+                var btns = parent.document.querySelectorAll('button[kind="secondary"]');
+                btns.forEach(b => {{
+                    if (b.innerText === "{label}") {{
+                        b.classList.add("active");
+                    }}
+                }});
+                </script>
+            """, unsafe_allow_html=True)
 
-# Main content area
-st.markdown(f"## 👋 {st.session_state.current_page}")
-
-if st.session_state.current_page == "Home":
+# Page content functions
+def show_home():
+    st.title("CLASS WHISPERER👻")
+    st.markdown("## 👋 Home")
     st.write("Welcome to the dashboard.")
-elif st.session_state.current_page == "Attendance":
+
+def show_attendance():
+    st.markdown("## 📅 Attendance")
     st.write("Track attendance here.")
-elif st.session_state.current_page == "Alerts":
+
+def show_alerts():
+    st.markdown("## 🚨 Alerts")
     st.write("Latest alerts and messages.")
-elif st.session_state.current_page == "Class Notes":
+
+def show_notes():
+    st.markdown("## 📓 Class Notes")
     st.write("Access or upload class notes.")
-elif st.session_state.current_page == "Progress":
+
+def show_progress():
+    st.markdown("## 📈 Progress")
     st.write("Monitor academic progress.")
-elif st.session_state.current_page == "Teachers Feedback":
+
+def show_feedback():
+    st.markdown("## 📝 Teachers Feedback")
     st.write("Share or view feedback.")
-elif st.session_state.current_page == "Ask Doubts":
+
+def show_doubts():
+    st.markdown("## ❓ Ask Doubts")
     st.write("Post and answer questions.")
-elif st.session_state.current_page == "Assistant Bot":
+
+def show_bot():
+    st.markdown("## 🤖 Assistant Bot")
     st.write("Interact with your assistant bot.")
+
+# Show selected page
+page_functions = {
+    "Home": show_home,
+    "Attendance": show_attendance,
+    "Alerts": show_alerts,
+    "Class Notes": show_notes,
+    "Progress": show_progress,
+    "Teachers Feedback": show_feedback,
+    "Ask Doubts": show_doubts,
+    "Assistant Bot": show_bot
+}
+
+page_functions[st.session_state.current_page]()
