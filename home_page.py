@@ -109,7 +109,30 @@ def show_attendance():
 
 def show_alerts():
     st.markdown("## 🚨 Alerts")
-    st.write("Latest alerts and messages.")
+    st.write("Stay updated with the latest announcements from your teachers or admins.")
+
+    # Sample alerts – this can later be dynamic
+    alerts = [
+        {"title": "Mid-Sem Exam Scheduled", "body": "Your mid-sem exam starts from July 22nd. Prepare accordingly.", "type": "info"},
+        {"title": "Assignment Deadline", "body": "Data Structures assignment is due on July 5th. Submit via portal.", "type": "warning"},
+        {"title": "New Notes Uploaded", "body": "Machine Learning lecture notes have been uploaded.", "type": "success"},
+    ]
+
+    # Style mapping
+    colors = {
+        "info": "#3a3aff",
+        "warning": "#ff914d",
+        "success": "#4caf50"
+    }
+
+    for alert in alerts:
+        st.markdown(f"""
+            <div style='background-color: {colors[alert['type']]}; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; color: white;'>
+                <h4 style='margin-bottom: 0.3rem;'>{alert['title']}</h4>
+                <p style='margin: 0;'>{alert['body']}</p>
+            </div>
+        """, unsafe_allow_html=True)
+
 
 def show_notes():
     st.markdown("## 📓 Class Notes")
