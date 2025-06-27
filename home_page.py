@@ -107,29 +107,50 @@ def show_home():
 def show_attendance():
     st.markdown("## 📅 Attendance")
     st.write("Track attendance here.")
-
+import datetime
 
 def show_alerts():
     st.markdown("## 🚨 Alerts & Class Exchanges")
-    st.write("All important announcements and class reschedules will appear here.")
 
-    # Simulated role — change this to "student" to test view-only
-    role = "admin"  # or "teacher" or "student"
+    # --- USER ROLE LOGIN ---
+    if "user_role" not in st.session_state or st.session_state.user_role == "":
+        with st.sidebar:
+            st.markdown("### 🔐 Login as")
+            role_choice = st.selectbox("Select your role", ["", "student", "teacher", "admin"], format_func=lambda x: "Select Role" if x == "" else x.capitalize())
+            if role_choice != "":
+                st.session_state.user_role = role_choice
 
-    # Session state for alert storage
+
+    role = st.session_state.user_role.capitalize()
+
+    st.markdown(f"**You are logged in as:** `{role}`")
+
+    # --- Sample alert storage (session) ---
     if "alert_list" not in st.session_state:
         st.session_state.alert_list = [
-            {"title": "Mid-Sem Exam Scheduled", "body": "Starts July 22.", "type": "info", "by": "Admin", "time": "2025-06-27 11:30"},
-            {"title": "DS Class Exchange", "body": "DS class moved from Mon 3PM to Wed 10AM", "type": "warning", "by": "Prof. Mehta", "time": "2025-06-27 10:00"},
+            {
+                "title": "Mid-Sem Exam Scheduled",
+                "body": "Mid-sem exam begins July 22.",
+                "type": "info",
+                "by": "Admin",
+                "time": "2025-06-27 11:30"
+            },
+            {
+                "title": "Class Exchange - DS",
+                "body": "DS class moved to Wednesday 10AM.",
+                "type": "warning",
+                "by": "Prof. Mehta",
+                "time": "2025-06-27 10:00"
+            }
         ]
 
-    # Only admins/teachers can post
-    if role in ["admin", "teacher"]:
+    # --- POST ALERT: Only for admin or teacher ---
+    if role.lower() in ["admin", "teacher"]:
         with st.expander("➕ Post New Alert / Class Exchange"):
             title = st.text_input("Title")
             body = st.text_area("Message")
-            alert_type = st.selectbox("Type", ["info", "warning", "success"])
-            author = st.text_input("Your Name", value="Admin" if role == "admin" else "Teacher")
+            alert_type = st.selectbox("Alert Type", ["info", "warning", "success"])
+            author = st.text_input("Your Name", value=role)
             if st.button("Post Alert"):
                 new_alert = {
                     "title": title,
@@ -141,17 +162,18 @@ def show_alerts():
                 st.session_state.alert_list.insert(0, new_alert)
                 st.success("✅ Alert posted!")
 
-    # Alert color mapping
-    colors = {
+    # --- Show Alerts to everyone ---
+    st.markdown("### 📢 Recent Alerts")
+
+    type_colors = {
         "info": "#3a3aff",
         "warning": "#ff914d",
         "success": "#4caf50"
     }
 
-    # Display all alerts
     for alert in st.session_state.alert_list:
         st.markdown(f"""
-            <div style='background-color: {colors[alert['type']]}; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; color: white;'>
+            <div style='background-color: {type_colors[alert['type']]}; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; color: white;'>
                 <h4 style='margin-bottom: 0.3rem;'>{alert['title']}</h4>
                 <p style='margin: 0.2rem 0;'>{alert['body']}</p>
                 <p style='font-size: 0.85rem; color: #ddd;'>By {alert['by']} • {alert['time']}</p>
