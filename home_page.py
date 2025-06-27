@@ -50,7 +50,10 @@ def main_app():
     elif st.session_state.current_page=="Alerts":
         st.switch_page("pages/alerts.py")
     elif st.session_state.current_page=="Teachers Feedback":
-        st.switch_page("teachers_feedback.py")
+        st.switch_page("pages/teacher_feedback.py")
+    elif st.session_state.current_page=="Ask Doubts":
+        st.switch_page("pages/ask_doubts.py")
+    
     else:
         st.markdown(f"## {pages[st.session_state.current_page]}")
         st.info(f"This page ({st.session_state.current_page}) is under construction.")
