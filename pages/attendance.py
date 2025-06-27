@@ -1,51 +1,39 @@
-# pages/attendance.py
 import streamlit as st
 
-DEFAULT_SUBJECTS = [
-    "Basic Electrical Engineering",
-    "Mathematics",
-    "Scientific Programming",
-    "Scientific Programming Lab",
-    "Basic Electrical Engineering Lab"
-]
+# --- Fake attendance storage (later replace with DB or file) ---
+if "attendance_data" not in st.session_state:
+    st.session_state.attendance_data = {}
 
-def show_attendance():
-    st.markdown("## 📅 Attendance")
+# --- Section to Student Mapping ---
+sections = {
+    "Section A": ["student_a1", "student_a2"],
+    "Section B": ["student_b1", "student_b2"],
+    "Section C": ["student_c1", "student_c2"]
+}
 
-    if "subjects" not in st.session_state:
-        st.session_state.subjects = DEFAULT_SUBJECTS.copy()
+st.markdown("## 📅 Attendance")
 
-    role = st.session_state.get("role", "student")
+# --- ROLE: Admin/Teacher ---
+if st.session_state.role in ["admin", "teacher"]:
+    subject = st.selectbox("Select Subject", ["Math", "Physics", "Chemistry"])
+    section = st.selectbox("Select Section", list(sections.keys()))
+    student = st.selectbox("Select Student", sections[section])
+    status = st.radio("Status", ["Present", "Absent"], horizontal=True)
 
-    selected_subject = st.selectbox("Select Subject", st.session_state.subjects)
+    if st.button("✅ Submit Attendance"):
+        st.session_state.attendance_data.setdefault(student, []).append(
+            {"subject": subject, "status": status}
+        )
+        st.success(f"{student} marked as {status} in {subject}.")
 
-    st.markdown("### Mark Attendance")
-    col1, col2 = st.columns(2)
-    with col1:
-        student_name = st.text_input("Student Name")
-    with col2:
-        status = st.selectbox("Status", ["Present", "Absent"])
-
-    if st.button("Submit Attendance"):
-        if student_name:
-            st.success(f"Marked **{status}** for **{student_name}** in **{selected_subject}**.")
-        else:
-            st.error("Please enter a student name.")
-
-    if role == "teacher":
-        st.markdown("---")
-        st.markdown("### 🛠️ Manage Subjects")
-
-        new_subject = st.text_input("Add New Subject")
-        if st.button("Add Subject"):
-            if new_subject and new_subject not in st.session_state.subjects:
-                st.session_state.subjects.append(new_subject)
-                st.success(f"Added subject: **{new_subject}**")
-            else:
-                st.warning("Subject already exists or is empty.")
-
-        remove_subject = st.selectbox("Remove Subject", [""] + st.session_state.subjects)
-        if st.button("Remove Selected Subject"):
-            if remove_subject:
-                st.session_state.subjects.remove(remove_subject)
-                st.success(f"Removed subject: **{remove_subject}**")
+# --- ROLE: Student ---
+elif st.session_state.role == "student":
+    student_name = st.session_state.username
+    st.markdown(f"### 👋 Hello, **{student_name}**")
+    
+    if student_name in st.session_state.attendance_data:
+        st.markdown("### 📊 Your Attendance")
+        for record in st.session_state.attendance_data[student_name]:
+            st.write(f"- **{record['subject']}** → `{record['status']}`")
+    else:
+        st.info("No attendance records found yet.")

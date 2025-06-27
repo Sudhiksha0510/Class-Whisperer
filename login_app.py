@@ -3,7 +3,8 @@ import streamlit as st
 # Dummy credentials
 USER_CREDENTIALS = {
     "student1": {"password": "pass123", "role": "student"},
-    "teacher1": {"password": "teach123", "role": "teacher"}
+    "teacher1": {"password": "teach123", "role": "teacher"},
+    "admin1": {"password": "admin123", "role": "admin"},
 }
 
 def login():
@@ -39,6 +40,7 @@ def login():
             st.session_state.logged_in = True
             st.session_state.username = username
             st.session_state.role = user["role"]
-            st.rerun()  # To move to home_page after login
+            st.experimental_set_query_params(page="Home")
+            st.rerun()
         else:
             st.error("Invalid credentials.")
