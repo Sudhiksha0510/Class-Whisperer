@@ -1,23 +1,19 @@
-# login_app.py
 import streamlit as st
 
+# Dummy credentials
 USER_CREDENTIALS = {
-    "admin1": {"password": "adminpass", "role": "admin"},
-    "teacher1": {"password": "teacherpass", "role": "teacher"},
-    "student1": {"password": "studentpass", "role": "student"}
+    "student1": {"password": "pass123", "role": "student"},
+    "teacher1": {"password": "teach123", "role": "teacher"}
 }
 
 def login():
-    st.set_page_config(page_title="Class Whisperer Login", layout="wide")
+    st.set_page_config(page_title="Class Whisperer Login", layout="wide", initial_sidebar_state="collapsed")
 
     st.markdown("""
         <style>
         html, body, [class*="css"] {
             font-family: 'Poppins', sans-serif;
             background-color: #0d0d0f;
-            color: white;
-        }
-        .stTextInput input, .stTextInput label {
             color: white;
         }
         .stTextInput > div > div {
@@ -43,6 +39,6 @@ def login():
             st.session_state.logged_in = True
             st.session_state.username = username
             st.session_state.role = user["role"]
-            st.experimental_rerun()  # ✅ immediately reloads app.py, which shows home_page
+            st.rerun()  # To move to home_page after login
         else:
-            st.error("Invalid credentials. Try again.")
+            st.error("Invalid credentials.")

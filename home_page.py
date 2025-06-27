@@ -1,9 +1,10 @@
 # home_page.py
 import streamlit as st
+from pages.attendance import show_attendance  # import from new file
 
 def main_app():
     # Page configuration
-    st.set_page_config(page_title="Class Whisperer", layout="wide")
+    st.set_page_config(page_title="Class Whisperer", layout="wide", initial_sidebar_state="expanded")
 
     # Custom style
     st.markdown("""
@@ -21,7 +22,6 @@ def main_app():
             padding: 1rem;
         }
 
-        /* Sidebar nav styling */
         button[kind="secondary"] {
             all: unset;
             display: block;
@@ -46,7 +46,7 @@ def main_app():
         </style>
     """, unsafe_allow_html=True)
 
-    # List of pages
+    # Navigation items
     pages = {
         "Home": "🏠 Home",
         "Attendance": "📅 Attendance",
@@ -58,11 +58,11 @@ def main_app():
         "Assistant Bot": "🤖 Assistant Bot"
     }
 
-    # Default page state
+    # Set default page
     if "current_page" not in st.session_state:
         st.session_state.current_page = "Home"
 
-    # Sidebar navigation
+    # Sidebar
     with st.sidebar:
         st.markdown("## 📚 Class Whisperer")
         for key, label in pages.items():
@@ -82,14 +82,10 @@ def main_app():
                     </script>
                 """, unsafe_allow_html=True)
 
-    # Individual page content functions
+    # Page-specific logic
     def show_home():
         st.markdown("## 👋 Home")
         st.write("Welcome to the dashboard.")
-
-    def show_attendance():
-        st.markdown("## 📅 Attendance")
-        st.write("Track attendance here.")
 
     def show_alerts():
         st.markdown("## 🚨 Alerts")
@@ -127,5 +123,5 @@ def main_app():
         "Assistant Bot": show_bot
     }
 
-    # Display selected page
+    # Display selected
     page_functions[st.session_state.current_page]()
