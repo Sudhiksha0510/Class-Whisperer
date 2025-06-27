@@ -3,6 +3,11 @@ import streamlit as st
 def main_app():
     st.set_page_config(page_title="Class Whisperer", layout="wide")
 
+    def show_alerts():
+    # Import alert logic dynamically from the alerts.py file
+     with open("pages/alerts.py", "r", encoding="utf-8") as f:
+            exec(f.read(), globals())
+
     pages = {
         "Home": "🏠 Home",
         "Attendance": "📅 Attendance",
@@ -41,6 +46,8 @@ def main_app():
         st.write("Welcome to the Class Whisperer dashboard.")
     elif st.session_state.current_page == "Attendance":
         st.switch_page("pages/attendance.py")
+    elif st.session_state.current_page=="Alerts":
+        st.switch_page("pages/alerts.py")
     else:
         st.markdown(f"## {pages[st.session_state.current_page]}")
         st.info(f"This page ({st.session_state.current_page}) is under construction.")
