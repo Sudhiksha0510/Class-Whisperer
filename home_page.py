@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import base64
 from io import BytesIO
+import datetime
 
 # Convert image to base64
 def image_to_base64(img):
@@ -107,29 +108,53 @@ def show_attendance():
     st.markdown("## 📅 Attendance")
     st.write("Track attendance here.")
 
+
 def show_alerts():
-    st.markdown("## 🚨 Alerts")
-    st.write("Stay updated with the latest announcements from your teachers or admins.")
+    st.markdown("## 🚨 Alerts & Class Exchanges")
+    st.write("All important announcements and class reschedules will appear here.")
 
-    # Sample alerts – this can later be dynamic
-    alerts = [
-        {"title": "Mid-Sem Exam Scheduled", "body": "Your mid-sem exam starts from July 22nd. Prepare accordingly.", "type": "info"},
-        {"title": "Assignment Deadline", "body": "Data Structures assignment is due on July 5th. Submit via portal.", "type": "warning"},
-        {"title": "New Notes Uploaded", "body": "Machine Learning lecture notes have been uploaded.", "type": "success"},
-    ]
+    # Simulated role — change this to "student" to test view-only
+    role = "admin"  # or "teacher" or "student"
 
-    # Style mapping
+    # Session state for alert storage
+    if "alert_list" not in st.session_state:
+        st.session_state.alert_list = [
+            {"title": "Mid-Sem Exam Scheduled", "body": "Starts July 22.", "type": "info", "by": "Admin", "time": "2025-06-27 11:30"},
+            {"title": "DS Class Exchange", "body": "DS class moved from Mon 3PM to Wed 10AM", "type": "warning", "by": "Prof. Mehta", "time": "2025-06-27 10:00"},
+        ]
+
+    # Only admins/teachers can post
+    if role in ["admin", "teacher"]:
+        with st.expander("➕ Post New Alert / Class Exchange"):
+            title = st.text_input("Title")
+            body = st.text_area("Message")
+            alert_type = st.selectbox("Type", ["info", "warning", "success"])
+            author = st.text_input("Your Name", value="Admin" if role == "admin" else "Teacher")
+            if st.button("Post Alert"):
+                new_alert = {
+                    "title": title,
+                    "body": body,
+                    "type": alert_type,
+                    "by": author,
+                    "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+                }
+                st.session_state.alert_list.insert(0, new_alert)
+                st.success("✅ Alert posted!")
+
+    # Alert color mapping
     colors = {
         "info": "#3a3aff",
         "warning": "#ff914d",
         "success": "#4caf50"
     }
 
-    for alert in alerts:
+    # Display all alerts
+    for alert in st.session_state.alert_list:
         st.markdown(f"""
             <div style='background-color: {colors[alert['type']]}; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; color: white;'>
                 <h4 style='margin-bottom: 0.3rem;'>{alert['title']}</h4>
-                <p style='margin: 0;'>{alert['body']}</p>
+                <p style='margin: 0.2rem 0;'>{alert['body']}</p>
+                <p style='font-size: 0.85rem; color: #ddd;'>By {alert['by']} • {alert['time']}</p>
             </div>
         """, unsafe_allow_html=True)
 
