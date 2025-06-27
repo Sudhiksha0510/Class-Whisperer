@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def main_app():
     st.set_page_config(page_title="Class Whisperer", layout="wide")
 
@@ -48,6 +49,8 @@ def main_app():
         st.switch_page("pages/attendance.py")
     elif st.session_state.current_page=="Alerts":
         st.switch_page("pages/alerts.py")
+    elif st.session_state.current_page=="Teachers Feedback":
+        st.switch_page("teachers_feedback.py")
     else:
         st.markdown(f"## {pages[st.session_state.current_page]}")
         st.info(f"This page ({st.session_state.current_page}) is under construction.")
