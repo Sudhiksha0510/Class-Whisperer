@@ -1,12 +1,14 @@
 # app.py
 import streamlit as st
 from login_app import login
+from home_page import main_app
 
-# This ensures login state is checked first
-if "logged_in" not in st.session_state or not st.session_state.logged_in:
+# Check login
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+
+# Show login or dashboard
+if not st.session_state.logged_in:
     login()
-    st.stop()
 else:
-    # Redirect to home page
-    st.switch_page("pages/home_page.py")
-
+    main_app()

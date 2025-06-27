@@ -1,7 +1,6 @@
-# login_page.py
+# login_app.py
 import streamlit as st
 
-# Dummy user database
 USER_CREDENTIALS = {
     "admin1": {"password": "adminpass", "role": "admin"},
     "teacher1": {"password": "teacherpass", "role": "teacher"},
@@ -44,7 +43,6 @@ def login():
             st.session_state.logged_in = True
             st.session_state.username = username
             st.session_state.role = user["role"]
-            st.session_state.current_page = "🏠 Home"
-            st.switch_page("pages/home_page.py")
+            st.experimental_rerun()  # ✅ immediately reloads app.py, which shows home_page
         else:
             st.error("Invalid credentials. Try again.")
