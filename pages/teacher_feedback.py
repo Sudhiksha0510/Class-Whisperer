@@ -4,7 +4,6 @@ import os
 from textblob import TextBlob
 import plotly.express as px
 
-
 st.set_page_config(page_title="Teachers Feedback", layout="wide")
 
 # --- Ensure data folder exists ---
@@ -71,13 +70,10 @@ if not filtered_df.empty:
 
     st.markdown("### 📊 Average Ratings")
     avg_ratings = filtered_df.groupby("teacher")[numeric_cols].mean().reset_index()
-    # Ensure numeric types
-    numeric_cols = ["clarity", "supportiveness", "punctuality"]
-    avg_ratings[numeric_cols] = avg_ratings[numeric_cols].apply(pd.to_numeric, errors="coerce")
 
-# Now apply formatting safely
-    st.dataframe(avg_ratings.style.format("{:.2f}"))
-
+    # ✅ Fix: Format only numeric columns
+    numeric_only = avg_ratings.select_dtypes(include='number').columns
+    st.dataframe(avg_ratings.style.format({col: "{:.2f}" for col in numeric_only}))
 
     st.markdown("#### All Positive Reviews")
     for _, row in filtered_df.iterrows():
