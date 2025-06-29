@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+
 
 # Configure Streamlit page
 st.set_page_config(page_title="Class Whisperer", layout="wide")
