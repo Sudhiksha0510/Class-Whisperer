@@ -1,6 +1,10 @@
 import streamlit as st
 from datetime import datetime
 
+def show():
+    st.title("🚨 Alerts")
+    st.write("This is the Alerts page.")
+
 # Initialize alerts store
 if "alerts" not in st.session_state:
     st.session_state.alerts = []

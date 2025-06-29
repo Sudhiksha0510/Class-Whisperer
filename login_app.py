@@ -26,6 +26,13 @@ def login():
             border: 1px solid #ff4b4b;
             color: #ff4b4b;
         }
+        /* ✅ Hide the default Streamlit multi-page nav */
+        [data-testid="stSidebarNav"] {
+            display: none !important;
+        }
+        [data-testid="stSidebarNavSeparator"] {
+            display: none !important;
+        }
         </style>
     """, unsafe_allow_html=True)
 

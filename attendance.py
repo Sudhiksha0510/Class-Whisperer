@@ -1,5 +1,17 @@
 import streamlit as st
 
+
+def show():
+    st.title("📅 Attendance")
+    role = st.session_state.get("role", "")
+    if role == "Teacher":
+        st.subheader("Teacher View: Mark Attendance")
+        st.write("You can upload or mark attendance here.")
+    else:
+        st.subheader("Student View: View Attendance")
+        st.write("Your attendance records are shown here.")
+
+        
 # --- Initial Attendance Data Setup (replace later with DB or persistent storage) ---
 if "attendance_data" not in st.session_state:
     st.session_state.attendance_data = {}

@@ -3,6 +3,10 @@ import os
 import pandas as pd
 from datetime import datetime
 
+def show():
+    st.title("📚 Notes Repository")
+    st.write("Upload or browse class notes here.")
+
 st.set_page_config(page_title="📓 Class Notes", layout="wide")
 
 # Paths

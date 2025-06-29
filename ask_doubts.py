@@ -1,6 +1,10 @@
 import streamlit as st
 import datetime
 
+def show():
+    st.title("💬 Ask Doubts")
+    st.write("Ask questions and view answers here.")
+
 if "logged_in" not in st.session_state or not st.session_state.logged_in:
     st.error("You must log in to view this page.")
     st.stop()
