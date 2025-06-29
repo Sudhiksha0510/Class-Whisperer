@@ -4,6 +4,10 @@ import os
 from textblob import TextBlob
 import plotly.express as px
 
+def show():
+    st.title("📝 Teacher Feedback")
+    st.write("Provide or view teacher feedback here.")
+
 st.set_page_config(page_title="Teachers Feedback", layout="wide")
 
 # --- Ensure data folder exists ---

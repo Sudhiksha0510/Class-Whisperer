@@ -3,6 +3,10 @@ import pandas as pd
 import os
 import plotly.express as px
 
+def show():
+    st.title("📈 Progress")
+    st.write("View your progress reports here.")
+
 st.set_page_config(page_title="📊 Student Progress", layout="wide")
 
 DATA_FILE = "data/student_progress.csv"
