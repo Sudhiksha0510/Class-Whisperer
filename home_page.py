@@ -4,34 +4,6 @@ import openai
 # Configure Streamlit page
 st.set_page_config(page_title="Class Whisperer", layout="wide")
 def main_app():
-# Set your OpenAI API Key
-    openai.api_key = st.secrets.get("OPENAI_API_KEY")
-
-# --- SIDEBAR: ClassMate Assistant ---
-    with st.sidebar.expander("🤖 ClassMate Assistant", expanded=False):
-        if "sidebar_chat" not in st.session_state:
-            st.session_state.sidebar_chat = [
-            {"role": "system", "content": "You're ClassMate — a fun Indian college assistant. Reply with Hinglish, emojis, and help students or teachers in short, useful replies."}
-        ]
-
-        user_input = st.text_input("Ask anything...")
-
-        if user_input:
-            st.session_state.sidebar_chat.append({"role": "user", "content": user_input})
-
-            with st.spinner("Thinking..."):
-                try:
-                    response = openai.ChatCompletion.create(
-                        model="gpt-3.5-turbo",
-                        messages=st.session_state.sidebar_chat,
-                        temperature=0.7,
-                        max_tokens=300
-                    )
-                    reply = response.choices[0].message.content
-                    st.session_state.sidebar_chat.append({"role": "assistant", "content": reply})
-                    st.markdown(reply)
-                except Exception as e:
-                    st.error(f"Bot error: {e}")
 
 # --- Define Pages ---
     def show_alerts():
