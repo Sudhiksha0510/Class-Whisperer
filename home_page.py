@@ -1,6 +1,5 @@
 import streamlit as st
 
-
 # Configure Streamlit page
 st.set_page_config(page_title="Class Whisperer", layout="wide")
 def main_app():
